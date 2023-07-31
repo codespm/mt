@@ -1,0 +1,6 @@
+body { padding-top: 8px; }
+.form-floating>.form-control:not(:placeholder-shown)~label::after { background-color: transparent; }
+.form-floating>.form-control:not(:-moz-placeholder-shown)~label::after { background-color: transparent; }
+.form-floating>.form-control-plaintext~label::after,.form-floating>.form-control:focus~label::after,.form-floating>.form-control:not(:placeholder-shown)~label::after,.form-floating>.form-select~label::after { background-color: transparent; }
+.form-control::-moz-placeholder { color: var(--bs-primary-color); }
+.form-control::placeholder { color: var(--bs-primary-color); }

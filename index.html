@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+	<head> 
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="myTrades">
+		<title>myTrades</title>
+		<link href="bootstrap.css" rel="stylesheet">
+		<link href="style.css" rel="stylesheet">
+		<!-- <link rel="manifest" href="manifest.json" /> -->
+		<!-- <link rel="icon" href="icons/xxxxxxx.svg" /> -->
+		<meta name="theme-color" content="#0d6efd">
+	</head>
+	<body>
+		<header>
+			<div class="navbar bg-white shadow-sm fixed-top" id="navbar">
+				<div class="container-fluid">
+					<a href="#section/trade-list" class="navbar-brand d-flex align-items-center text-primary fw-bold" id="btnBrand">
+						myTrades&nbsp;<sup class="text-body-tertiary fw-normal" id="subTitle"></sup>
+					</a>
+					<button type="button" id="btnAdmin" class="btn btn-primary bg-primary bg-opacity-10 border-0 text-primary shadow-sm py-1" value="#section/admin">Admin</button>
+				</div>
+			</div>
+		</header>
+		<main>
+			<!-- #################
+				SECTION: ADMIN
+			################### -->
+			<section class="pt-5 container-fluid d-none" id="admin">
+				<div class="row">
+					<div class="col-12 pt-4 pb-0 mx-auto" style="padding-top:32px !important;">
+						<div id="cardAdmin" class="card border-0">
+							<div class="card-body bg-secondary bg-opacity-10 shadow">
+								<div class="row">
+									<div class="col-12">
+										<div class="mb-2 text-secondary h6">Theme: Light</div>
+										<button type="button" id="btnLightTheme" class="btn btn-sm bg-primary bg-opacity-10 text-primary">Light</button>
+										<button type="button" id="btnDarkTheme" class="btn btn-sm bg-dark bg-opacity-10 text-primary">Dark</button>
+										<hr class="border-primary" />
+										<div class="mb-2 text-secondary h6">Data</div>
+										<div class="mb-2"><small class="text-secondary d-inline">Import/export json file trades data. Import: If the trade ID does not exist, create it, else update.</small></div>
+										<label class="btn btn-sm bg-primary bg-opacity-10 text-primary" for="btnImportData">Import</label>
+										<input type="file" class="form-control d-none" id="btnImportData" onchange="importData(this)" />
+										<a href="#section/admin" class="btn btn-sm bg-primary bg-opacity-10 text-primary" id="btnExportData" onclick="exportData()">Export</button>&nbsp;<a id="exportDataLink" style="display: none;">Export</a>
+										<button id="btnRemoveDataConfirm" class="btn btn-sm bg-primary bg-opacity-10 text-primary" onclick="removeData('confirm');">Remove</button>
+										<button id="btnRemoveDataYes" class="btn btn-sm bg-danger bg-opacity-10 border-danger text-danger d-none" onclick="removeData('yes');">Yes</button>
+										<button id="btnRemoveDataCancel" class="btn btn-sm bg-success bg-opacity-10 border-success text-success d-none" onclick="removeData('cancel');">Cancel</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- #################
+				SECTION: FORM TRADE
+			################### -->
+			<section class="pt-5 container d-none" id="trade_form">
+				<div class="row">
+					<div class="col-12 pt-5 pb-0 mx-auto" style="padding-top:32px !important;">
+						<div id="cardFormTrade" class="card border-0">
+							<div class="card-body bg-secondary bg-opacity-10 shadow">
+								<form id="formTrade"> 
+									<input type="hidden" id="inputHiddenID" value="0" />
+									<div class="row">
+										<div class="col-sm-6 mb-3">
+											<div class="form-floating">
+												<input type="text" class="form-control text-primary fw-bold" id="inputTextPer" placeholder="BTC/XMR" autocomplete="off">
+												<label for="inputTextPer">Per</label><div class="invalid-feedback"></div>
+											</div>
+										</div>
+										<div class="col-sm-6 mb-3">
+											<label for="inputRadioPosition" class="form-label text-secondary">Position</label>
+											<br/>
+											<div class="form-check form-check-inline">
+												<input type="radio" class="form-check-input" value="short" name="inputRadioPosition" id="inputRadioPositionShort" checked>
+												<label class="form-check-label" for="inputRadioPositionShort">Short</label>
+											</div>
+											<div class="form-check form-check-inline">
+												<input type="radio" class="form-check-input" value="long" name="inputRadioPosition" id="inputRadioPositionLong">
+												<label class="form-check-label" for="inputRadioPositionLong">Long</label>
+											</div>
+										</div>
+									</div>	
+									<div class="row">
+										<div class="col-sm-3 mb-3">
+											<div class="form-floating">
+												<input type="number" class="form-control text-primary fw-bold" id="inputTextLeverage" placeholder="0" autocomplete="off">
+												<label for="inputTextLeverage">Leverage (X)</label><div class="invalid-feedback"></div>
+											</div>
+										</div>
+										<div class="col-sm-3 mb-3">
+											<div class="form-floating">
+												<input type="number" class="form-control text-primary fw-bold" id="inputTextEntryPrice" placeholder="0" autocomplete="off">
+												<label for="inputTextEntryPrice">Entry Price</label><div class="invalid-feedback"></div>
+											</div>
+										</div>	
+										<div class="col-sm-3 mb-3">
+											<div class="form-floating">
+												<input type="number" class="form-control text-primary fw-bold" id="inputTextStopLoss" placeholder="0" autocomplete="off">
+												<label for="inputTextStopLoss">Stop Loss</label><div class="invalid-feedback"></div>
+											</div>
+										</div>
+										<div class="col-sm-3 mb-3">
+											<label for="inputRadioMarketOrLimit1" class="form-label text-secondary">M/L</label>
+											<br/>
+											<div class="form-check form-check-inline">
+												<input type="radio" class="form-check-input" value="market" name="inputRadioMarketOrLimit1" id="inputRadioMarket1" checked>
+												<label class="form-check-label" for="inputRadioMarket1">Market</label>
+											</div>
+											<div class="form-check form-check-inline">
+												<input type="radio" class="form-check-input" value="limit" name="inputRadioMarketOrLimit1" id="inputRadioLimit1">
+												<label class="form-check-label" for="inputRadioLimit1">Limit</label>
+											</div>
+										</div>
+									</div>	
+									<div class="row">
+										<div class="col-sm-3 mb-3">
+											<div class="form-floating">
+												<input type="number" class="form-control text-primary fw-bold" id="inputTextTakeProfit" placeholder="0" autocomplete="off">
+												<label for="inputTextTakeProfit">Take Profit</label><div class="invalid-feedback"></div>
+											</div>
+										</div>	
+										<div class="col-sm-3 mb-3">
+											<div class="form-floating">
+												<input type="number" class="form-control text-primary fw-bold" id="inputTextClosePrice" placeholder="0" autocomplete="off">
+												<label for="inputTextClosePrice">Close Price</label><div class="invalid-feedback"></div>
+											</div>
+										</div>	
+										<div class="col-sm-3 mb-3">
+											<label for="inputRadioMarketOrLimit2" class="form-label text-secondary">L/M</label>
+											<br/>
+											<div class="form-check form-check-inline">
+												<input type="radio" class="form-check-input" value="market" name="inputRadioMarketOrLimit2" id="inputRadioMarket2" checked>
+												<label class="form-check-label" for="inputRadioMarket2">Market</label>
+											</div>
+											<div class="form-check form-check-inline">
+												<input type="radio" class="form-check-input" value="limit" name="inputRadioMarketOrLimit2" id="inputRadioLimit2">
+												<label class="form-check-label" for="inputRadioLimit2">Limit</label>
+											</div>
+										</div>										
+									</div>	
+									<div class="row">
+										<div class="col-sm-6 mb-3">
+											<div class="form-floating">
+												<input type="text" class="form-control text-primary fw-bold" id="inputTextComment" placeholder="Comment.." autocomplete="off">
+												<label for="inputTextComment">Comment</label><div class="invalid-feedback"></div>
+											</div>
+										</div>
+										<div class="col-sm-3 mb-3">
+											<label for="inputTextOrderType" class="form-label text-secondary">Order Type</label>
+											<br/>
+											<div class="form-check form-check-inline">
+												<input type="checkbox" class="form-check-input" value="test" id="inputTextOrderTypeTest" name="inputTextOrderType">
+												<label class="form-check-label" for="inputTextOrderTypeTest">Test</label>
+											</div>
+										</div>	
+									</div>
+									<div class="row">
+										<div class="col-sm-7 mb-3 mt-2">
+											<span class="fw-normal badge bg-dark bg-opacity-10 border-0 text-secondary px-3 border-1 border-start border-primary">R <div id="calcR" class="d-inline"></div></span>
+											<span class="fw-normal badge bg-dark bg-opacity-10 border-0 text-secondary px-3 border-1 border-start border-primary">R2 <div id="calcR2" class="d-inline"></div></span>
+											<span class="fw-normal badge bg-dark bg-opacity-10 border-0 text-secondary px-3 border-1 border-start border-primary">RF <div id="calcRF" class="d-inline"></div></span>
+											<span class="fw-normal badge bg-dark bg-opacity-10 border-0 text-secondary px-3 border-1 border-start border-primary">Risk <div id="calcRisk" class="d-inline"></div></span>
+											<span class="fw-normal badge bg-dark bg-opacity-10 border-0 text-secondary px-3 border-1 border-start border-primary">Rrr <div id="calcRrr" class="d-inline"></div></span>
+											<span class="fw-normal badge bg-dark bg-opacity-10 border-0 text-secondary px-3 border-1 border-start border-primary">Return <div id="calcReturn" class="d-inline"></div></span> 
+										</div>
+										<div class="col-sm-5 mb-1 text-end">
+											<a href="#section/trade-list" class="btn btn-primary bg-primary bg-opacity-10 border-0 text-primary shadow-sm mb-1" id="btnSaveTrade">Save</a>
+											<a href="#section/trade-list" class="btn btn-primary bg-secondary bg-opacity-10 border-0 text-secondary shadow-sm mb-1" id="btnDuplicateTrade">Duplicate</a>
+											<a href="#section/trade-list" class="btn btn-secondary bg-white bg-opacity-10 border-0 text-secondary shadow-sm mb-1" id="btnCancelTrade">Cancel</a>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="card-footer bg-transparent border-0">
+								<small class="text-secondary" id="smallTextDates"></small> 
+							</div>  
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- #################
+				SECTION: TABLE LIST
+			################### -->
+			<section id="trade_list" class="d-none">
+				<div id="containerTradeList" class="container-fluid pt-0 pb-2 mt-5 bg-body-tertiary">
+					<div class="row bg-primary bg-opacity-10 pt-2 pb-3">
+						<div class="col-sm-6 pt-2 pb-0">
+							<input type="checkbox" class="btn-check" id="btnCountTrade" autocomplete="off" disabled checked>
+							<label class="btn btn-sm btn-outline-primary rounded-pill px-3 mt-2 mr-1" style="width:70px;" id="tradesCountFilter" for="btnCountTrade" >0</label>
+							<span class="text-primary">|</span>
+							<input type="checkbox" class="btn-check" id="btnFilterOpen" autocomplete="off" checked>
+							<label class="btn btn-sm btn-outline-primary rounded-pill px-3 mt-2 mr-1" for="btnFilterOpen" >Open</label>
+							<input type="checkbox" class="btn-check" id="btnFilterClosed" autocomplete="off" checked>
+							<label class="btn btn-sm btn-outline-primary rounded-pill px-3 mt-2 mr-1" for="btnFilterClosed" >Closed</label>
+							<span class="text-primary">|</span>
+							<input type="checkbox" class="btn-check" id="btnFilterShort" autocomplete="off">
+							<label class="btn btn-sm btn-outline-primary rounded-pill px-3 mt-2 mr-1" for="btnFilterShort">Short</label>
+							<input type="checkbox" class="btn-check" id="btnFilterLong" autocomplete="off">
+							<label class="btn btn-sm btn-outline-primary rounded-pill px-3 mt-2 mr-1" for="btnFilterLong">Long</label>
+							<span class="text-primary">|</span>
+							<input type="checkbox" class="btn-check" id="btnFilterTest" autocomplete="off">
+							<label class="btn btn-sm btn-outline-primary rounded-pill px-3 mt-2" for="btnFilterTest">Test</label>			  
+						</div>
+						<div class="col-sm-6 text-end pt-2 pb-0">
+							<div class="input-group">
+								<input type="text" class="form-control form-control-sm mt-2 text-primary" placeholder="Search in comment or per .." id="inputSearch"  autocomplete="off" />
+								<button class="btn btn-primary bg-primary bg-opacity-10 border-0 text-primary mt-2" type="button" id="btnSearch">..</button>
+							</div>						
+						</div>
+					</div>
+					<div class="row pb-3">
+						<div class="col-sm-12 pt-2 text-end">
+							<span class="fw-normal badge bg-white border-0 text-secondary px-3 border-1 border-start border-primary">AVG Return <div id="totalAvgReturn" class="d-inline"></div></span>
+							<span class="fw-normal badge bg-white border-0 text-secondary px-3 border-1 border-start border-primary">AVG Hits <div id="totalAvgHits" class="d-inline"></div></span>
+							<span class="fw-normal badge bg-white border-0 text-secondary px-3 border-1 border-start border-primary">MAT <div id="totalMat" class="d-inline"></div></span>
+							<span class="fw-normal badge bg-white border-0 text-secondary px-3 border-1 border-start border-primary">FK <div id="totalFK" class="d-inline"></div></span>
+							<div id="messages" class="d-inline"></div>
+						</div>
+					</div>
+
+					<!-- DATA TABLE: NO MOBILE -->
+					<div class="table-responsive d-none d-sm-block">
+						<table class="table shadow-sm">
+							<thead>
+								<tr>
+									<td class="bg-transparent" style="width:228px;">
+										<div class="d-grid gap-2">
+											<a id="btnNewTrade" href="#section/trade-form" class="btn btn-lg text-start btn-sm btn-primary bg-primary bg-opacity-10 border-0 text-primary shadow-sm">+ Trade</a>
+										</div>
+									</td>
+									<td class="bg-transparent text-secondary text-end" style="width:50px;">X</td>
+									<td class="bg-transparent text-secondary text-end">EP</td>
+									<td class="bg-transparent text-secondary text-end">SL</td>
+									<td class="bg-transparent text-secondary text-end">TP</td>
+									<td class="bg-transparent text-secondary text-end">CP</td>
+									<td class="bg-transparent text-secondary">&nbsp;</td>
+								</tr>
+							</thead>
+							<tbody id="tableTradeList"></tbody>
+						</table>
+					</div>
+
+					<!-- DATA TABLE: OK MOBILE -->
+					<div class="table-responsive d-block d-sm-none">
+						<a id="btnNewTrade" href="#section/trade-form" class="btn btn-lg text-start btn-sm btn-primary bg-primary bg-opacity-10 border-0 text-primary shadow-sm mb-2 ms-2">+ Trade</a>
+						<table class="table shadow-sm">
+							<tbody id="tableTradeListMobile"></tbody>
+						</table>
+					</div>
+				</div>
+			</section>
+
+		</main>
+		<footer class="text-body-secondary py-4 text-center d-none" id="footer">
+			<div class="container-fluid">
+				<p class="mb-1 text-secondary"><a href="#" class="text-secondary">criptonautas.co</a> - <a href="#" class="text-secondary">myTrades</a> - v0.2.0</p>
+				<p class="mb-1 text-secondary">The data is stored on your device.</p>
+			</div>
+		</footer>
+		<script src="app.js" defer></script>
+		<script>
+			//if ("serviceWorker" in navigator) {
+			//  navigator.serviceWorker.register("sw.js");
+			//}
+		</script>
+    </body>
+</html>
